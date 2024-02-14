@@ -1,5 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import { Roboto_Flex } from "next/font/google";
+import colors from "./styles/colors";
 
 const roboto = Roboto_Flex({ subsets: ["latin"] });
 
@@ -14,4 +15,13 @@ export default createGlobalStyle`
     margin: 0;
     font-family: ${roboto.style.fontFamily}; 
   }
+
+h1{
+  font-size: x-large;
+  font-style: italic;
+  font-weight: 900;
+  margin: 10px 0;
+  color: ${colors.typography[50]};
+}
+
 `;
