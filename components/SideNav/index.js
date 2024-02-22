@@ -9,15 +9,14 @@ import IconSettings from "../Icons/Settings";
 import IconTeam from "../Icons/Team";
 
 const StyledNavigation = styled.ol`
-  background-color: ${colors.bg};
   position: fixed;
   height: 100%;
-  top: 0;
+  top: 51.5px;
   display: flex;
   flex-direction: column;
   width: fit-content;
-  padding-top: 35px;
-  padding-left: 0;
+  padding: 0;
+  margin: 0;
   color: ${colors.typography[50]};
   border-right: solid 3px ${colors.primary[700]};
 `;

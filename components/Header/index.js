@@ -4,7 +4,6 @@ import colors from "@/styles/colors";
 
 const StyledHeader = styled.header`
   position: fixed;
-  background-color: ${colors.bg};
   top: 0;
   width: 100%;
   display: flex;
