@@ -4,13 +4,13 @@ import colors from "@/styles/colors";
 
 const StyledHeader = styled.header`
   position: fixed;
-  background-color: ${colors.bg};
   top: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
   border-bottom: solid 3px ${colors.primary[700]};
+  z-index: 10;
 `;
 
 export default function Header() {

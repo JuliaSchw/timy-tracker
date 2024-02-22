@@ -12,8 +12,10 @@ export default createGlobalStyle`
   }
 
   body {
-    margin: 0;
     font-family: ${roboto.style.fontFamily}; 
+    margin: 0;
+    background-color: ${colors.bg};
+    color: ${colors.typography[50]};
   }
 
 h1{
@@ -21,7 +23,6 @@ h1{
   font-style: italic;
   font-weight: 900;
   margin: 10px 0;
-  color: ${colors.typography[50]};
 }
 
 `;
