@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import colors from "@/styles/colors";
+import colors from "../../styles/colors";
 
 const StyledHeader = styled.header`
   position: fixed;
@@ -13,11 +13,13 @@ const StyledHeader = styled.header`
   z-index: 10;
 `;
 
-export default function Header() {
+const Header: React.FC = () => {
   return (
     <StyledHeader>
       <h1>Timy Tracker</h1>
       <h1>Hello User!</h1>
     </StyledHeader>
   );
-}
+};
+
+export default Header;
