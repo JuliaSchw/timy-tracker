@@ -1,4 +1,4 @@
-export default function IconAcute() {
+export default function IconTimer() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import colors from "@/styles/colors";
 import StyledLink from "../StyledLink";
-import IconAcute from "@/styles/icon-acute";
+import IconTimer from "../Icons/Acute";
 import IconDashboard from "../Icons/Dashboard";
 import IconFlight from "../Icons/Flight";
 import IconSettings from "../Icons/Settings";
@@ -30,7 +30,7 @@ export default function SideNav() {
     <StyledNavigation>
       <StyledListElement>
         <StyledLink href={"/"}>
-          <IconAcute />
+          <IconTimer />
         </StyledLink>
       </StyledListElement>
       <StyledListElement>
