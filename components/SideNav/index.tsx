@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import colors from "@/styles/colors";
+import colors from "../../styles/colors";
 import StyledLink from "../StyledLink";
 import IconTimer from "../Icons/Acute";
 import IconDashboard from "../Icons/Dashboard";
@@ -25,7 +25,7 @@ const StyledListElement = styled.li`
   list-style: none;
 `;
 
-export default function SideNav() {
+const SideNav: React.FC = () => {
   return (
     <StyledNavigation>
       <StyledListElement>
@@ -55,4 +55,6 @@ export default function SideNav() {
       </StyledListElement>
     </StyledNavigation>
   );
-}
+};
+
+export default SideNav;
