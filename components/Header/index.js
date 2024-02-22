@@ -11,6 +11,7 @@ const StyledHeader = styled.header`
   justify-content: space-between;
   padding: 0 20px;
   border-bottom: solid 3px ${colors.primary[700]};
+  z-index: 10;
 `;
 
 export default function Header() {
