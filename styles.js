@@ -13,6 +13,7 @@ export default createGlobalStyle`
 
   body {
     font-family: ${roboto.style.fontFamily}; 
+    margin: 0;
   }
 
 h1{

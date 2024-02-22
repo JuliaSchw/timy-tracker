@@ -3,6 +3,10 @@ import styled from "styled-components";
 import colors from "@/styles/colors";
 import StyledLink from "../StyledLink";
 import IconAcute from "@/styles/icon-acute";
+import IconDashboard from "../Icons/Dashboard";
+import IconFlight from "../Icons/Flight";
+import IconSettings from "../Icons/Settings";
+import IconTeam from "../Icons/Team";
 
 const StyledNavigation = styled.ol`
   background-color: ${colors.bg};
@@ -32,12 +36,22 @@ export default function SideNav() {
       </StyledListElement>
       <StyledListElement>
         <StyledLink href={"/"}>
-          <IconAcute />
+          <IconDashboard />
         </StyledLink>
       </StyledListElement>
       <StyledListElement>
         <StyledLink href={"/"}>
-          <IconAcute />
+          <IconFlight />
+        </StyledLink>
+      </StyledListElement>
+      <StyledListElement>
+        <StyledLink href={"/"}>
+          <IconTeam />
+        </StyledLink>
+      </StyledListElement>
+      <StyledListElement>
+        <StyledLink href={"/"}>
+          <IconSettings />
         </StyledLink>
       </StyledListElement>
     </StyledNavigation>
