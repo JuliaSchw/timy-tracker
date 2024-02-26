@@ -19,24 +19,30 @@ const HomePage: React.FC = () => {
     return `${day}/${month}/${year}`;
   };
 
-  const { isActive, time, startTimer, pauseTimer, resetTimer } =
-    useTimerStore();
+  const {
+    isActive,
+    time,
+    startTimer,
+    pauseTimer,
+    resetTimer,
+    updateTimer, // Stelle sicher, dass du diese Funktion jetzt importierst
+  } = useTimerStore();
 
   useEffect(() => {
-    if (isActive) {
-      const intervalId = setInterval(() => {
-        // Hier wird die Zeit aktualisiert
-        const newSeconds = time.seconds + 1;
-        if (newSeconds === 60) {
-          resetTimer();
-        } else {
-          startTimer();
-        }
-      }, 1000);
+    // Versuche, gespeicherte Zeit und Status zu laden
+    const savedTime = localStorage.getItem("timerTime");
+    const savedIsActive = localStorage.getItem("timerIsActive");
 
-      return () => clearInterval(intervalId);
+    if (savedTime) {
+      const time = JSON.parse(savedTime);
+      updateTimer(time); // Setze die Zeit aus dem localStorage
     }
-  }, [isActive, time.seconds, startTimer, resetTimer]);
+
+    if (savedIsActive === "true") {
+      // Nur starten, wenn der Timer aktiv war
+      startTimer();
+    }
+  }, [startTimer, updateTimer]);
 
   const formatTime = (time: {
     hours: number;

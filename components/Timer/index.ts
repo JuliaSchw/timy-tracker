@@ -2,12 +2,8 @@ import { create } from "zustand";
 
 interface TimerState {
   isActive: boolean;
-  time: {
-    hours: number;
-    minutes: number;
-    seconds: number;
-  };
-  intervalId: NodeJS.Timeout | null; // Hinzugefügtes intervalId-Attribut
+  time: { hours: number; minutes: number; seconds: number };
+  intervalId: NodeJS.Timeout | null;
   startTimer: () => void;
   pauseTimer: () => void;
   resetTimer: () => void;
@@ -18,76 +14,60 @@ interface TimerState {
   }) => void;
 }
 
-const useTimerStore = create<TimerState>(
-  (
-    setState: (
-      partial: TimerState | ((state: TimerState) => TimerState)
-    ) => void,
-    getState: () => TimerState
-  ) => ({
-    isActive: false,
-    time: { hours: 0, minutes: 0, seconds: 0 },
-    intervalId: null, // Initialisiert intervalId mit null
+const useTimerStore = create<TimerState>((set, get) => ({
+  isActive: false,
+  time: { hours: 0, minutes: 0, seconds: 0 },
+  intervalId: null,
 
-    startTimer: () => {
-      const intervalId = setInterval(() => {
-        // Funktion zum Aktualisieren der Timerzeit aufrufen
-        const { hours, minutes, seconds } = getState().time;
-        let newSeconds = seconds + 1;
-        let newMinutes = minutes;
-        let newHours = hours;
-        if (newSeconds === 60) {
-          newSeconds = 0;
-          newMinutes++;
-        }
-        if (newMinutes === 60) {
-          newMinutes = 0;
-          newHours++;
-        }
-        setState((prevState) => ({
-          ...prevState,
-          time: {
-            hours: newHours,
-            minutes: newMinutes,
-            seconds: newSeconds,
-          },
-        }));
-      }, 1000);
+  startTimer: () => {
+    if (get().intervalId) return; // Verhindere das Erstellen mehrerer Intervalle
 
-      setState((prevState) => ({
-        ...prevState,
-        isActive: true,
-        intervalId: intervalId, // Setzen des intervalId-Attributs
-      }));
-    },
+    const intervalId = setInterval(() => {
+      const { hours, minutes, seconds } = get().time;
+      let newSeconds = seconds + 1;
+      let newMinutes = minutes;
+      let newHours = hours;
+      if (newSeconds === 60) {
+        newSeconds = 0;
+        newMinutes++;
+      }
+      if (newMinutes === 60) {
+        newMinutes = 0;
+        newHours++;
+      }
+      const newTime = {
+        hours: newHours,
+        minutes: newMinutes,
+        seconds: newSeconds,
+      };
+      set({ time: newTime });
+      localStorage.setItem("timerTime", JSON.stringify(newTime));
+    }, 1000);
 
-    pauseTimer: () => {
-      const intervalId = getState().intervalId;
-      if (intervalId) clearInterval(intervalId);
-      setState((prevState) => ({
-        ...prevState,
-        isActive: false,
-        intervalId: null, // Zurücksetzen von intervalId auf null
-      }));
-    },
+    set({ isActive: true, intervalId });
+    localStorage.setItem("timerIsActive", "true");
+  },
 
-    resetTimer: () => {
-      const intervalId = getState().intervalId;
-      if (intervalId) clearInterval(intervalId);
-      setState((prevState) => ({
-        ...prevState,
-        isActive: false,
-        time: { hours: 0, minutes: 0, seconds: 0 },
-        intervalId: null, // Zurücksetzen von intervalId auf null
-      }));
-    },
+  pauseTimer: () => {
+    const intervalId = get().intervalId;
+    if (intervalId) clearInterval(intervalId);
+    set({ isActive: false, intervalId: null });
+    localStorage.setItem("timerIsActive", "false");
+  },
 
-    updateTimer: (newTime) =>
-      setState((prevState) => ({
-        ...prevState,
-        time: newTime,
-      })),
-  })
-);
+  resetTimer: () => {
+    const intervalId = get().intervalId;
+    if (intervalId) clearInterval(intervalId);
+    const resetTime = { hours: 0, minutes: 0, seconds: 0 };
+    set({ isActive: false, time: resetTime, intervalId: null });
+    localStorage.setItem("timerTime", JSON.stringify(resetTime));
+    localStorage.setItem("timerIsActive", "false");
+  },
+
+  updateTimer: (newTime) => {
+    set({ time: newTime });
+    localStorage.setItem("timerTime", JSON.stringify(newTime));
+  },
+}));
 
 export default useTimerStore;
