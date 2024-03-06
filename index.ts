@@ -5,15 +5,15 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.user.create({
     data: {
-      role: "Nutzer",
-      email: "t.nauerz@uronovis.de",
-      surname: "Tobias",
-      lastname: "Nauerz",
-      department: "Innendienst",
-      position: "Customer-Service",
-      contract: 38.5,
-      birthday: new Date("2001-01-01"),
-      password: "uronovis",
+      role: "",
+      email: "",
+      surname: "",
+      lastname: "",
+      department: "",
+      position: "",
+      contract: 0,
+      birthday: new Date(""),
+      password: "",
     },
   });
 
