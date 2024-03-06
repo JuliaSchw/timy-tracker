@@ -26,6 +26,7 @@ model Post {
 
 model User {
   id         Int      @id @default(autoincrement())
+  role       String
   email      String   @unique
   surname    String?
   lastname   String?
@@ -41,10 +42,17 @@ model User {
 }
 
 model Timer {
-  id       Int      @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   authorId Int
-  author   User     @relation(fields: [authorId], references: [id])
-  start    DateTime
-  pause    DateTime
-  finish   DateTime
+  author   User      @relation(fields: [authorId], references: [id])
+  sessions Session[]
+}
+
+model Session {
+  id      Int       @id @default(autoincrement())
+  timerId Int
+  timer   Timer     @relation(fields: [timerId], references: [id])
+  start   DateTime
+  pause   DateTime?
+  finish  DateTime?
 }
