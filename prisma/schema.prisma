@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int           @id @default(autoincrement())
+  role          String
+  email         String        @unique
+  surname       String?
+  lastname      String?
+  department    String
+  position      String
+  contract      Int
+  birthday      DateTime
+  password      String        @unique
+  timers        Timer[]
+  workSummaries WorkSummary[]
+  sickDays      SickDay[]
+  vacationDays  VacationDay[]
+}
+
+model Timer {
+  id        Int            @id @default(autoincrement())
+  authorId  Int
+  author    User           @relation(fields: [authorId], references: [id])
+  intervals TimeInterval[]
+}
+
+model TimeInterval {
+  id      Int       @id @default(autoincrement())
+  timerId Int
+  start   DateTime
+  end     DateTime?
+  Timer   Timer     @relation(fields: [timerId], references: [id])
+}
+
+model WorkSummary {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  date            DateTime
+  totalTimeWorked Int
+  User            User     @relation(fields: [userId], references: [id])
+}
+
+model SickDay {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  startDate DateTime
+  endDate   DateTime
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model VacationDay {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  startDate DateTime
+  endDate   DateTime
+  approved  Boolean  @default(false)
+  User      User     @relation(fields: [userId], references: [id])
+}
