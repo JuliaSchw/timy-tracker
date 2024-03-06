@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,46 +7,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String   @db.VarChar(255)
-  content   String?
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-}
-
 model User {
-  id         Int      @id @default(autoincrement())
-  role       String
-  email      String   @unique
-  surname    String?
-  lastname   String?
-  birthday   DateTime
-  vacation   Int
-  contract   Int
-  position   String
-  department String
-  leftover   Int
-  password   String   @unique
-  posts      Post[]
-  timers     Timer[]
+  id            Int           @id @default(autoincrement())
+  role          String
+  email         String        @unique
+  surname       String?
+  lastname      String?
+  department    String
+  position      String
+  contract      Int
+  birthday      DateTime
+  password      String        @unique
+  timers        Timer[]
+  workSummaries WorkSummary[]
+  sickDays      SickDay[]
+  vacationDays  VacationDay[]
 }
 
 model Timer {
-  id       Int       @id @default(autoincrement())
-  authorId Int
-  author   User      @relation(fields: [authorId], references: [id])
-  sessions Session[]
+  id        Int            @id @default(autoincrement())
+  authorId  Int
+  author    User           @relation(fields: [authorId], references: [id])
+  intervals TimeInterval[]
 }
 
-model Session {
+model TimeInterval {
   id      Int       @id @default(autoincrement())
   timerId Int
-  timer   Timer     @relation(fields: [timerId], references: [id])
   start   DateTime
-  pause   DateTime?
-  finish  DateTime?
+  end     DateTime?
+  Timer   Timer     @relation(fields: [timerId], references: [id])
+}
+
+model WorkSummary {
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  date            DateTime
+  totalTimeWorked Int
+  User            User     @relation(fields: [userId], references: [id])
+}
+
+model SickDay {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  startDate DateTime
+  endDate   DateTime
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model VacationDay {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  startDate DateTime
+  endDate   DateTime
+  approved  Boolean  @default(false)
+  User      User     @relation(fields: [userId], references: [id])
 }
