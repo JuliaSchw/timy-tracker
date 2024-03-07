@@ -5,15 +5,16 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.user.create({
     data: {
-      role: "",
-      email: "",
-      surname: "",
-      lastname: "",
-      department: "",
-      position: "",
-      contract: 0,
-      birthday: new Date(""),
-      password: "",
+      role: "Admin",
+      email: "js.schwerdt@gmail.com",
+      surname: "Julia",
+      lastname: "Schwerdtfeger",
+      department: "Tester",
+      position: "Tester",
+      contract: 40,
+      cVacation: 100,
+      birthday: new Date("1994-05-27"),
+      password: "test",
     },
   });
 

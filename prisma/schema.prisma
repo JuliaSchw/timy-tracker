@@ -16,6 +16,7 @@ model User {
   department    String
   position      String
   contract      Int
+  cVacation     Int
   birthday      DateTime
   password      String        @unique
   timers        Timer[]

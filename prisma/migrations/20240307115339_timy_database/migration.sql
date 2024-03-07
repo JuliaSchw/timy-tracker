@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "department" TEXT NOT NULL,
     "position" TEXT NOT NULL,
     "contract" INTEGER NOT NULL,
+    "cVacation" INTEGER NOT NULL,
     "birthday" TIMESTAMP(3) NOT NULL,
     "password" TEXT NOT NULL,
 
