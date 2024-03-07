@@ -36,7 +36,12 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     // Trigger sign in with the email provider
-    await signIn("email", { email, redirect: false });
+    await signIn("email", {
+      email,
+      redirect: false,
+      callbackUrl: `${window.location.origin}/`,
+    });
+
     // Optionally, handle the result, e.g., show a message to check the inbox
   };
 
