@@ -11,14 +11,14 @@ export default function App({
   return (
     <>
       <GlobalStyle />
-      <Header />
-      <Section>
-        <SessionProvider session={session}>
+      <SessionProvider session={session}>
+        <Header />
+        <Section>
           {/*  is the session positioned at the right point?  */}
           <Component {...pageProps} />
-        </SessionProvider>
-      </Section>
-      <SideNav />
+        </Section>
+        <SideNav />{" "}
+      </SessionProvider>
     </>
   );
 }

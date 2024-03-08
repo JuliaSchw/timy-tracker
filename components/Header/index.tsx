@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import colors from "../../styles/colors";
+import { signOut, useSession } from "next-auth/react";
 
 const StyledHeader = styled.header`
   position: fixed;
@@ -13,11 +14,31 @@ const StyledHeader = styled.header`
   z-index: 10;
 `;
 
+const SignOutButton = styled.button`
+  background: none;
+  border: none;
+  color: ${colors.secondary[500]};
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const Header: React.FC = () => {
+  const { data: session } = useSession();
+
   return (
     <StyledHeader>
       <h1>Timy Tracker</h1>
-      <h1>Hello User!</h1>
+      {session ? (
+        <div>
+          <span>Hello, {session.user.surname || "User"}!</span>
+          <SignOutButton onClick={() => signOut()}>Sign Out</SignOutButton>
+        </div>
+      ) : (
+        <h1>Hello, Guest!</h1>
+      )}
     </StyledHeader>
   );
 };

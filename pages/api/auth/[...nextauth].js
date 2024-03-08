@@ -20,10 +20,11 @@ export const authOptions = {
     verifyRequest: "/auth/verify-request", // A custom verify request page
   },
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, user }) {
       // Send properties to the client, like user's role from your Prisma schema
       session.user.id = user.id;
       session.user.role = user.role;
+      session.user.surname = user.surname;
       return session;
     },
   },
