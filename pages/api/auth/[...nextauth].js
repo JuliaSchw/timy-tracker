@@ -8,10 +8,16 @@ const prisma = new PrismaClient();
 export default NextAuth({
   providers: [
     EmailProvider({
-      server: process.env.EMAIL_SERVER, // Konfiguration Ihres E-Mail-Servers
-      from: process.env.EMAIL_FROM, // Die "Von"-Adresse für E-Mails
+      server: process.env.EMAIL_SERVER,
+      from: process.env.EMAIL_FROM,
     }),
   ],
   adapter: PrismaAdapter(prisma),
-  // Weitere Konfigurationsoptionen...
+
+  callbacks: {
+    session({ session, token, user }) {
+      session.user.id = user.id;
+      return session;
+    },
+  },
 });
