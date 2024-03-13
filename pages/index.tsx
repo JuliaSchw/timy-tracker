@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import useTimerStore from "../components/Timer";
+import { getSession } from "next-auth/react";
 
 const TimerSection = styled.div`
   display: flex;
@@ -68,3 +69,21 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
+
+export async function getServerSideProps(context) {
+  const session = await getSession({ req: context.req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/api/auth/signin", // Hier die URL zur Anmeldeseite angeben
+        permanent: false,
+      },
+    };
+  }
+
+  // Fügen Sie zusätzliche Props hinzu, die Ihre Seite benötigt, falls erforderlich
+  return {
+    props: { session },
+  };
+}
