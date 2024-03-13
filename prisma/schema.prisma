@@ -42,6 +42,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  timers        Timer[]  
 }
 
 model VerificationToken {
@@ -55,4 +56,14 @@ model VerificationToken {
 model AllowedEmail {
   id    Int    @id @default(autoincrement())
   email String @unique
+}
+
+model Timer {
+  id         Int      @id @default(autoincrement())
+  startTime  DateTime
+  endTime    DateTime? // Optional, falls der Timer noch läuft
+  userId     String    // Verbindung zum Benutzer
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@index([userId]) // Ein Index auf userId, um die Abfragegeschwindigkeit zu verbessern
 }
