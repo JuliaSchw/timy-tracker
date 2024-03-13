@@ -5,29 +5,13 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const authOptions = {
+export default NextAuth({
   providers: [
     EmailProvider({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
+      server: process.env.EMAIL_SERVER, // Konfiguration Ihres E-Mail-Servers
+      from: process.env.EMAIL_FROM, // Die "Von"-Adresse für E-Mails
     }),
   ],
   adapter: PrismaAdapter(prisma),
-  pages: {
-    signIn: "/auth/signin", // A custom sign-in page
-    signOut: "/auth/signout", // A custom sign-out page
-    error: "/auth/error", // A custom error page
-    verifyRequest: "/auth/verify-request", // A custom verify request page
-  },
-  callbacks: {
-    async session({ session, user }) {
-      // Send properties to the client, like user's role from your Prisma schema
-      session.user.id = user.id;
-      session.user.role = user.role;
-      session.user.surname = user.surname;
-      return session;
-    },
-  },
-};
-
-export default NextAuth(authOptions);
+  // Weitere Konfigurationsoptionen...
+});
