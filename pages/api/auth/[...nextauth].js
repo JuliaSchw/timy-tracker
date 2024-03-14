@@ -3,8 +3,7 @@ import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import nodemailer from "nodemailer";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export default NextAuth({
   providers: [
@@ -44,7 +43,7 @@ export default NextAuth({
   adapter: PrismaAdapter(prisma),
 
   callbacks: {
-    session({ session, token, user }) {
+    session({ session, user }) {
       session.user.id = user.id;
       return session;
     },
