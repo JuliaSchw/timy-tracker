@@ -36,16 +36,10 @@ const HomePage: React.FC = () => {
     return () => clearInterval(interval);
   }, [isActive, startTime]);
 
-  const handleStartButtonClick = async () => {
-    console.log("Start button clicked")
-    startTimer(); 
-    await axios.post("/api/timer/start"); 
-  };
-
   return (
     <TimerSection>
       <h2>Hallo Max Mustermann, heute ist der {formatDate(new Date())}!</h2>
-      <button onClick={isActive ? pauseTimer : handleStartButtonClick}>
+      <button onClick={isActive ? pauseTimer : startTimer}>
         {isActive ? "Pause" : "Start"}
       </button>
       <h2>Counter: {elapsedTime}</h2>
