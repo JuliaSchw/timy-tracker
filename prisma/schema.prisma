@@ -60,7 +60,7 @@ model AllowedEmail {
 
 model Timer {
   id         String      @id @default(cuid())
-  startTime  DateTime
+  startTime  DateTime? // Optional, falls noch gar nichts gestartet wurde 
   endTime    DateTime? // Optional, falls der Timer noch läuft
   userId     String    // Verbindung zum Benutzer
   user       User      @relation(fields: [userId], references: [id])
