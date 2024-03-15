@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import useTimerStore from "@/stores/useTimerStore";
 import TimerSection from "@/components/TimerSection";
+import prisma from "@/lib/prisma";
 
-const HomePage: React.FC<{}> = ({}) => {
+const HomePage: React.FC<{ user: { surname?: string; lastname?: string } }> = ({
+  user,
+}) => {
   const formatDate = (date: Date) => {
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -37,7 +40,10 @@ const HomePage: React.FC<{}> = ({}) => {
 
   return (
     <TimerSection>
-      <h2>Hallo hh, heute ist der {formatDate(new Date())}!</h2>
+      <h2>
+        Hallo {user.surname} {user.lastname}, heute ist der
+        {formatDate(new Date())}!
+      </h2>
       <button onClick={isActive ? pauseTimer : startTimer}>
         {isActive ? "Pause" : "Start"}
       </button>
@@ -60,7 +66,15 @@ export async function getServerSideProps(context) {
     };
   }
 
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { surname: true, lastname: true },
+  });
+
   return {
-    props: { session },
+    props: {
+      session,
+      user, // `user` enthält jetzt `surname` und `lastname`
+    },
   };
 }
