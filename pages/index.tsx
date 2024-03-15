@@ -2,12 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import useTimerStore from "@/stores/useTimerStore";
 import TimerSection from "@/components/TimerSection";
-import { ExtendedUser, Session } from "next-auth";
 
-const HomePage: React.FC<{ session: Session; extendedUser: ExtendedUser }> = ({
-  session,
-  extendedUser,
-}) => {
+const HomePage: React.FC<{}> = ({}) => {
   const formatDate = (date: Date) => {
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
