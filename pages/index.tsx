@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import useTimerStore from "@/stores/useTimerStore";
 import TimerSection from "@/components/TimerSection";
-import axios from "axios";
 
 const HomePage: React.FC = () => {
   const formatDate = (date: Date) => {
