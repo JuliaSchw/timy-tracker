@@ -50,5 +50,5 @@ const nextAuthOptions: NextAuthOptions = {
     },
   },
 };
-
+export { nextAuthOptions };
 export default NextAuth(nextAuthOptions);
