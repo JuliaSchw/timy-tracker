@@ -1,15 +1,22 @@
 import NextAuth from "next-auth";
+import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
   /**
-   * Extends the built-in session types with the custom user fields.
+   * Erweitert die Session-Schnittstelle um benutzerdefinierte Felder.
    */
   interface Session {
     user: {
-      id: number;
+      id: string;
       email?: string;
-      surname?: string; // Add your custom fields here
-      // You can add other custom fields that you might need
-    };
+      surname?: string;
+      lastname?: string;
+    } & Partial<DefaultSession["user"]>;
+  }
+  interface ExtendedUser {
+    id: string;
+    email: string;
+    surname: string;
+    lastname: string;
   }
 }

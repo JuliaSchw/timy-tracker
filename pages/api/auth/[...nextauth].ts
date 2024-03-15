@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import nodemailer from "nodemailer";
 import prisma from "@/lib/prisma";
 import { NextAuthOptions } from "next-auth";
+import { ExtendedUser } from "next-auth";
 
 const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -20,16 +21,13 @@ const nextAuthOptions: NextAuthOptions = {
         });
 
         if (!allowedEmail) {
-          // Optionally throw an error or log the attempt here
           console.log(`Access denied for: ${email}`);
           return;
         }
 
-        // Configure Nodemailer Transport
         const transporter = nodemailer.createTransport(server);
         const { host } = new URL(url);
 
-        // Send email
         await transporter.sendMail({
           to: email,
           from,
@@ -45,7 +43,11 @@ const nextAuthOptions: NextAuthOptions = {
     async session({ session, user }) {
       console.log("Session: ", session);
       console.log("User: ", user);
-
+      const extendedUser = user as unknown as ExtendedUser;
+      console.log(extendedUser);
+      console.log(extendedUser.surname);
+      session.user.surname = extendedUser.surname;
+      session.user.lastname = extendedUser.lastname;
       return session;
     },
   },

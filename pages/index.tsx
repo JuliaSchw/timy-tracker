@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import useTimerStore from "@/stores/useTimerStore";
 import TimerSection from "@/components/TimerSection";
+import { ExtendedUser, Session } from "next-auth";
 
-const HomePage: React.FC = () => {
+const HomePage: React.FC<{ session: Session; extendedUser: ExtendedUser }> = ({
+  session,
+  extendedUser,
+}) => {
   const formatDate = (date: Date) => {
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -37,7 +41,7 @@ const HomePage: React.FC = () => {
 
   return (
     <TimerSection>
-      <h2>Hallo Max Mustermann, heute ist der {formatDate(new Date())}!</h2>
+      <h2>Hallo hh, heute ist der {formatDate(new Date())}!</h2>
       <button onClick={isActive ? pauseTimer : startTimer}>
         {isActive ? "Pause" : "Start"}
       </button>
