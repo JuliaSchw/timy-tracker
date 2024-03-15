@@ -1,16 +1,15 @@
 import NextAuth from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
 import nodemailer from "nodemailer";
+import prisma from "@/lib/prisma";
+import { NextAuthOptions } from "next-auth";
 
-const prisma = new PrismaClient();
-
-export default NextAuth({
+const nextAuthOptions: NextAuthOptions = {
   providers: [
     EmailProvider({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
+      server: process.env.EMAIL_SERVER as string,
+      from: process.env.EMAIL_FROM as string,
       sendVerificationRequest: async ({
         identifier: email,
         url,
@@ -21,32 +20,31 @@ export default NextAuth({
         });
 
         if (!allowedEmail) {
-          // Werfen Sie hier eventuell einen Fehler oder loggen Sie den Versuch
-          console.log(`Zugriff verweigert für: ${email}`);
+          console.log(`Access denied for: ${email}`);
           return;
         }
 
-        // Nodemailer Transport konfigurieren
         const transporter = nodemailer.createTransport(server);
         const { host } = new URL(url);
 
-        // E-Mail senden
         await transporter.sendMail({
           to: email,
           from,
-          subject: `Anmeldung bei Ihrer App`,
-          text: `Melden Sie sich bei Ihrer App an, indem Sie auf den folgenden Link klicken:\n\n${url}\n\n`,
-          html: `<p>Melden Sie sich bei Ihrer App an, indem Sie auf den folgenden Link klicken:</p><p><a href="${url}">${url}</a></p>`,
+          subject: `Sign in to Your App`,
+          text: `Sign in to your app by clicking the following link:\n\n${url}\n\n`,
+          html: `<p>Sign in to your app by clicking the following link:</p><p><a href="${url}">${url}</a></p>`,
         });
       },
     }),
   ],
   adapter: PrismaAdapter(prisma),
-
   callbacks: {
-    session({ session, token, user }) {
-      session.user.id = user.id;
+    async session({ session, user }) {
+      console.log("Session: ", session);
+      console.log("User: ", user);
       return session;
     },
   },
-});
+};
+export { nextAuthOptions };
+export default NextAuth(nextAuthOptions);

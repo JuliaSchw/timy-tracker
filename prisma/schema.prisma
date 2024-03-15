@@ -36,12 +36,15 @@ model Session {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  surname       String?
+  lastname      String?
+  birthday      DateTime?
   accounts      Account[]
   sessions      Session[]
+  timers        Timer[]  
 }
 
 model VerificationToken {
@@ -53,6 +56,16 @@ model VerificationToken {
 }
 
 model AllowedEmail {
-  id    Int    @id @default(autoincrement())
+  id    String    @id @default(cuid())
   email String @unique
+}
+
+model Timer {
+  id         String      @id @default(cuid())
+  startTime  DateTime? // Optional, falls noch gar nichts gestartet wurde 
+  endTime    DateTime? // Optional, falls der Timer noch läuft
+  userId     String    // Verbindung zum Benutzer
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@index([userId]) // Ein Index auf userId, um die Abfragegeschwindigkeit zu verbessern
 }

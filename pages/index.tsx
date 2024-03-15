@@ -1,18 +1,12 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import useTimerStore from "../components/Timer";
+import React, { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
+import useTimerStore from "@/stores/useTimerStore";
+import TimerSection from "@/components/TimerSection";
+import prisma from "@/lib/prisma";
 
-const TimerSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 70vh;
-  gap: 20px;
-`;
-
-const HomePage: React.FC = () => {
+const HomePage: React.FC<{ user: { surname?: string; lastname?: string } }> = ({
+  user,
+}) => {
   const formatDate = (date: Date) => {
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -20,50 +14,40 @@ const HomePage: React.FC = () => {
     return `${day}/${month}/${year}`;
   };
 
-  const {
-    isActive,
-    time,
-    startTimer,
-    pauseTimer,
-    resetTimer,
-    updateTimer, // Stelle sicher, dass du diese Funktion jetzt importierst
-  } = useTimerStore();
+  const { isActive, startTimer, pauseTimer, startTime } = useTimerStore();
+  const [elapsedTime, setElapsedTime] = useState("00:00:00");
 
   useEffect(() => {
-    // Versuche, gespeicherte Zeit und Status zu laden
-    const savedTime = localStorage.getItem("timerTime");
-    const savedIsActive = localStorage.getItem("timerIsActive");
-
-    if (savedTime) {
-      const time = JSON.parse(savedTime);
-      updateTimer(time); // Setze die Zeit aus dem localStorage
+    let interval: number | undefined;
+    if (isActive && startTime) {
+      interval = window.setInterval(() => {
+        const now = new Date();
+        const elapsed = now.getTime() - startTime.getTime();
+        const hours = Math.floor(elapsed / 3600000);
+        const minutes = Math.floor((elapsed % 3600000) / 60000);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        setElapsedTime(
+          `${hours.toString().padStart(2, "0")}:${minutes
+            .toString()
+            .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+        );
+      }, 1000);
+    } else {
+      setElapsedTime("00:00:00");
     }
-
-    if (savedIsActive === "true") {
-      // Nur starten, wenn der Timer aktiv war
-      startTimer();
-    }
-  }, [startTimer, updateTimer]);
-
-  const formatTime = (time: {
-    hours: number;
-    minutes: number;
-    seconds: number;
-  }) => {
-    const { hours, minutes, seconds } = time;
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  };
+    return () => clearInterval(interval);
+  }, [isActive, startTime]);
 
   return (
     <TimerSection>
-      <h2>Hallo Max Mustermann, heute ist der {formatDate(new Date())} !</h2>
+      <h2>
+        Hallo {user.surname} {user.lastname}, heute ist der
+        {formatDate(new Date())}!
+      </h2>
       <button onClick={isActive ? pauseTimer : startTimer}>
         {isActive ? "Pause" : "Start"}
       </button>
-      <h2>Counter: {formatTime(time)}</h2>
-      <button onClick={resetTimer}>Reset</button>
+      <h2>Counter: {elapsedTime}</h2>
     </TimerSection>
   );
 };
@@ -76,14 +60,21 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: "/api/auth/signin", // Hier die URL zur Anmeldeseite angeben
+        destination: "/api/auth/signin",
         permanent: false,
       },
     };
   }
 
-  // Fügen Sie zusätzliche Props hinzu, die Ihre Seite benötigt, falls erforderlich
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { surname: true, lastname: true },
+  });
+
   return {
-    props: { session },
+    props: {
+      session,
+      user, // `user` enthält jetzt `surname` und `lastname`
+    },
   };
 }
